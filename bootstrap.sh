@@ -1,11 +1,11 @@
 #!/bin/sh -v
 export LANG=C
+export PuppetHome=/root/puppet
 aptitude install etckeeper git puppet linux-image-amd64 
 # Das braucht nochmals etwa zwei Minuten
 # etckeeper: lets keep us history of all files under /etc
 git config --global user.name "Your Name"     
 git config --global user.email you@example.com 
-export PuppetHome=/root/puppet
 mkdir $PuppetHome
 cd $PuppetHome
 # git common elexis-admin, may be rename it to puppet-elexis 
