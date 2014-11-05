@@ -1,0 +1,18 @@
+h1. puppet-example-practice
+
+h2. Usage
+
+In the directory production you find the example configuration for
+
+* ubuntu: a Ubuntu desktop client with Elexis, LibreOffice. Also runs
+** Elexis 3.0 (Opensource) with the recommended plugins for medical practice in Switzerland
+* server: a Debian server providing
+** mysql  with a database for elexis and one for tests and running backup every 4 hours /opt/backup/mysql/dumps
+** Elexis 3.0 (Opensource) with the recommended plugins for medical practice in Switzerland
+** Samba to provide network share for windos client
+*** the share programs contains also an installation of Elexis 3.0
+** x2goserver to allow remote access via x2go-clients
+** backup using rsnapshot of /ext and /home to /opt/backup/snapshots
+** etckeeper which creates a git repository of /etc
+
+Copyright (c) 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>

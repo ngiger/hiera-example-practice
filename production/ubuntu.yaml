@@ -1,0 +1,53 @@
+---
+# encoding: utf-8
+# Copyright 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>
+# Example for an ubuntu desktop client
+# TODO: NFS-Client mounts für /opt/samba
+
+elexis::nfs::client: true
+elexis::nfs::mounts:
+  /mnt/samba:
+    device:   server:/opt/samba
+    fstype:   nfs4
+    options:  defaults,soft,intr,rw,rsize=32768,wsize=32768,timeo=14,intr,actimeo=10
+
+elexis::samba::ensure: absent
+desktop::ensure:  true
+desktop::display_manager:  lightdm
+desktop::window_manager:    unity
+desktop::desktop_packages:
+  - libreoffice
+  - libreoffice-l10n-de
+  - libreoffice-kde
+  - mythes-de-ch
+  - gnucash
+  - thunderbird
+  - thunderbird-locale-de
+  - firefox-locale-fr
+  - firefox-locale-de
+  - firefox
+  - chromium-browser
+  - webaccounts-chromium-extension
+  - nemo
+  - openjdk-7-jdk
+  - manpages-de
+
+elexis::params::ensure: true
+apt::sources:
+ 'puppetlabs':
+     location: 'http://apt.puppetlabs.com'
+     repos: 'main'
+     key: '4BD6EC30'
+     key_server: 'pgp.mit.edu'
+ 'trusty_CH':
+     location: 'http://ch.archive.ubuntu.com/ubuntu'
+     release: 'trusty'
+     repos: 'main restricted universe multiverse'
+ 'trusty_security':
+     location: 'http://security.ubuntu.com/ubuntu'
+     release: 'trusty'
+     repos: 'main restricted universe multiverse'
+apt::ppa:
+  'universe':
+  'multiverse':
+
