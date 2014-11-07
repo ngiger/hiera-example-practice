@@ -1,4 +1,4 @@
-h1. puppet-example-practice
+h1. hiera-example-practice
 
 h2. Usage
 
@@ -9,7 +9,8 @@ In the directory production you find the example configuration for
 * server: a Debian server providing
 ** mysql  with a database for elexis and one for tests and running backup every 4 hours /opt/backup/mysql/dumps
 ** Elexis 3.0 (Opensource) with the recommended plugins for medical practice in Switzerland
-** Samba to provide network share for windos client
+** Samba to provide network share for windows clients
+** NFS4 (with ACL aka Access Control Lists) for linux clients
 *** the share programs contains also an installation of Elexis 3.0
 ** x2goserver to allow remote access via x2go-clients
 ** backup using rsnapshot of /ext and /home to /opt/backup/snapshots

@@ -1,0 +1,107 @@
+---
+# encoding: utf-8
+# Copyright 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>
+# Example for server with a mysql database
+
+# be careful when changing things and do one change after another.
+# eg. adding unzip to packages_for_admin will break with the error message
+#     Error: Could not apply complete catalog: Found 1 dependency cycle
+elexis::mysql_server::ensure: true
+x2go::version: wheezy  # or baikal or wheezy
+x2go::server::ensure: present
+packages_for_admin: [ fish, mosh, screen, lm-sensors, dlocate, mlocate, htop, curl, bzr, unattended-upgrades, inetutils-tools ]
+packages_for_server: [ smartmontools ]
+
+# TODO: ACL for /opt/samba
+# TODO: Backup-rsnapshot /opt/samba
+# TODO: NFS-Server für /opt/samba
+# nfs4-acl-tools
+elexis::nfs::client: true
+elexis::nfs::server: true
+elexis::acls::conf:
+  default:
+     permissions: []
+  # example for permissions on one line
+  /etc:
+     permissions: ['user:backup:r-X' ]
+  # we may not give any user here a read or write or ssh daemon cannot be started again
+  /etc/ssh:
+     permissions: ['user:backup:---', 'group::---', ]
+  # example for permissions one per line
+  /opt/backup:
+     permissions:
+      - 'user:backup:rwx'
+      - 'user:mustermann:r-x'
+  /home:
+     permissions: ['user:backup:r-x' ]
+  /opt/samba:
+     permissions:
+      - 'user:backup:r-x'
+      - 'group:praxis:rwx'
+      - 'other::---'
+  /opt/samba/inhaber:
+     permissions:
+      - 'user:backup:r-x'
+      - 'group:inhaber:rwx'
+      - 'group::rwx'
+      - 'other::---'
+  /usr/local/bin/reboot.sh:
+     permissions:
+      - 'user:cockpit:r-x'
+  /usr/local/bin/halt.sh:
+     permissions:
+      - 'user:cockpit:r-x'
+
+elexis::nfs:server:  true
+nfs::exports::definitions:
+  :samba:
+    :path:        '/opt/samba'
+    :options:     ['rw', 'async', 'acl', 'subtree_check' ]
+    :clients:     [ 172.25.1.0/24 ]
+
+elexis::samba::ensure: true
+elexis::samba::pdf_ausgabe: true
+elexis::samba::samba_pdf: /opt/samba/pdf_printer
+elexis::samba::pdf_share:
+  - "comment        = 'Drucken als PDF'"
+  - 'browsable      = true'
+  - 'read_only      = true'
+  - "force_user     = mustermann"
+  - 'guest_ok       = false'
+
+# samba::server::interfaces: [ eth0 ] # for vagrant I want to listen on all interfaces
+samba::server::workgroup: 'Dr. Mustermann'
+samba::server::server_string: '%h'
+samba::server::security: 'user'
+samba::server::passwd_chat: '*Enter\snew\sUNIX\spassword:* %n\n *Retype\snew\sUNIX\spassword:* %n\n .'
+samba::server::passwd_program: '/usr/bin/passwd %u'
+
+samba::server::shares:
+  profile:
+    - 'comment = Benutzerprofile'
+    - 'path = /home/samba/profile'
+    - 'writable = true'
+    - 'browsable = false'
+  homes:
+    - 'comment = Home Directories'
+    - 'browseable = no'
+    - 'writable = yes'
+  praxis:
+    - 'writable = yes'
+    - 'path = /opt/samba'
+    - 'valid users = @praxis'
+  inhaber:
+    - 'writable = yes'
+    - 'path = /opt/samba/inhaber'
+    - 'valid users = @inhaber'
+
+desktop::display_manager:  kdm
+desktop::window_manager:   kde
+desktop::desktop_packages:
+  - openjdk-7-jdk
+  - manpages-de
+
+cockpit::ensure: true
+cockpit::useMock: false
+cockpit::service::ensure: true
+cockpit::service::use_systemd: false

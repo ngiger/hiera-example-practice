@@ -1,0 +1,23 @@
+---
+# encoding: utf-8
+# Copyright 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>
+# configuration which is specific to the trusty
+apt::release: trusty
+apt::sources:
+ 'puppetlabs':
+     location: 'http://apt.puppetlabs.com'
+     repos: 'main'
+     key: '4BD6EC30'
+     key_server: 'pgp.mit.edu'
+ 'trusty_CH':
+     location: 'http://ch.archive.ubuntu.com/ubuntu'
+     release: 'trusty'
+     repos: 'main restricted universe multiverse'
+ 'trusty_security':
+     location: 'http://security.ubuntu.com/ubuntu'
+     release: 'trusty'
+     repos: 'main restricted universe multiverse'
+apt::ppa:
+  'universe':
+  'multiverse':
+

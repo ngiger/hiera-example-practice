@@ -1,0 +1,33 @@
+---
+# encoding: utf-8
+# Copyright 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>
+# configuration which is specific to the wheezy
+apt::release: wheezy
+apt::apt_update_frequency: always # always  at every puppet run, or daily, weekly, reluctantly
+apt::sources:
+ 'puppetlabs':
+     location: 'http://apt.puppetlabs.com'
+     repos: 'main'
+     key: '4BD6EC30'
+     key_server: 'pgp.mit.edu'
+ 'debian_security':
+     location: 'http://security.debian.org/'
+     release: 'wheezy/updates'
+     repos: 'main contrib non-free'
+     required_packages: 'debian-keyring debian-archive-keyring'
+     key: '46925553'
+     key_server: 'subkeys.pgp.net'
+     pin: '-10'
+     include_src: 'true'
+     include_deb: 'true'
+ 'debian_wheezy':
+     location: 'http://mirror.switch.ch/ftp/mirror/debian/'
+     release: 'wheezy'
+     repos: 'main contrib non-free'
+     required_packages: 'debian-keyring debian-archive-keyring'
+     key: '46925553'
+     key_server: 'subkeys.pgp.net'
+     pin: '-10'
+     include_src: 'true'
+     include_deb: 'true'
+

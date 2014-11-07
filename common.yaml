@@ -3,12 +3,16 @@
 # Copyright 2014 by Niklaus Giger <niklaus.giger@member.fsf.org>
 # Common configuration options for server and ubuntu desktop client
 
+apt::proxy_host:              172.25.1.70
+apt::proxy_port:              3142
+
+elexis::admin::editor_package: vim-nox
 elexis::backup::ensure: true
+elexis::params::db_type: mysql
 elexis::mysql_server::ensure: false # will be overridden on the server!
 elexis::params::ensure: true
 elexis::postgresql_server::ensure: false
-editor::default: vim-nox
-packages_for_admin: [ smartmontools, etckeeper ]
+packages_for_admin: [ smartmontools ] # etckeeper
 
 elexis::elexis_installations::demoDB:
   elexis_3_opensource:
@@ -17,17 +21,17 @@ elexis::elexis_installations::opensource:
   elexis_3_opensource:
     exe_name: Elexis_OpenSource_3
 
-elexis::params::elexis_main: mustermann
+elexis::params::elexis_main: mustermann # user that write access to the Elexis installatins
 elexis::params::add_system_groups: [ dialout, cdrom, plugdev, netdev, adm, sudo, ssh ]
 elexis::params::add_groups: [ praxis, inhaber ]
 
-# I avoid uid of 100? as I have seen cases that
+# Don't use UID 1000 and 1001. Reserved for ubuntu/vagrant
 elexis::params::user_definition:
   mustermann:
     mandant:  true
     ensure: present
-    uid: 4301
-    groups:  [ dialout, cdrom, plugdev, netdev, adm, sudo, ssh]
+    uid: 1010
+    groups:  [ praxis, inhaber, dialout, cdrom, plugdev, netdev, adm, sudo, ssh]
     pw_clear: not_so_secret
     comment: "Dr. Max Mustermann"
     managehome: false
@@ -35,13 +39,13 @@ elexis::params::user_definition:
   mpa:
     mandant:  false
     ensure: present
-    uid: 1002
-    groups:  [ dialout, cdrom, plugdev, netdev, adm, sudo ]
-    comment: "Comment from fixture Mustermann for mpa"
+    uid: 1020
+    groups:  [ praxis, dialout, cdrom, plugdev, netdev, adm, sudo ]
+    comment: "Medizinische Praxis-Assistentin"
     managehome: true
     shell: "/bin/bash"
   test:
+    comment: "Test mit Elexis-DemoDB"
     ensure: present
-    uid: 1999
+    uid: 1090
     pw_clear: test
-

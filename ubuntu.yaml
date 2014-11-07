@@ -9,13 +9,14 @@ elexis::nfs::mounts:
   /mnt/samba:
     device:   server:/opt/samba
     fstype:   nfs4
-    options:  defaults,soft,intr,rw,rsize=32768,wsize=32768,timeo=14,intr,actimeo=10
+    options:  defaults,acl,rw,soft,intr,rsize=32768,wsize=32768,timeo=14,intr,actimeo=10
 
-elexis::samba::ensure: absent
+packages_for_ubuntu: [ nfs4-acl-tools ]
 desktop::ensure:  true
 desktop::display_manager:  lightdm
 desktop::window_manager:    unity
 desktop::desktop_packages:
+  - ubuntu-desktop
   - libreoffice
   - libreoffice-l10n-de
   - libreoffice-kde
@@ -51,3 +52,4 @@ apt::ppa:
   'universe':
   'multiverse':
 
+x2go::client::ensure: true
