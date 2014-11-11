@@ -1,0 +1,2 @@
+#!/bin/sh
+logger "Elexis did run $0"

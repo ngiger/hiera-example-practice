@@ -1,0 +1,41 @@
+#!/bin/bash -v
+# Test change
+export startTime=`date`
+export LANG=C
+export SERVER=http://fest:3142/debian
+export SERVER=http://fest:3142/ftp.debian.org/debian
+export SERVER=http://localhost:3142/debian/
+export SERVER=ftp://ftp.ch.debian.org/debian/
+
+# taken from https://github.com/YunoHost/cd_build_v1/blob/master/simple-cdd-amd64.conf
+# export ARCH="amd64"
+# export DISKINFO="Niklaus Giger for Elexis $(date --utc +%Y%m%d)"
+# export OMIT_MANUAL=1
+# export OMIT_RELEASE_NOTES=1
+# export ARCHES="amd64"
+
+# cd x2go && dpkg-scanpackages . /dev/null  > Packages
+# --local-packages $PWD/x2go \
+echo $PWD
+#time build-simple-cdd --dist wheezy 2>&1 | tee build_elexis.log
+
+# time build-simple-cdd --dist wheezy --debian-mirror http://mirror.switch.ch/ftp/mirror/debian 2>&1 | tee build_elexis_iso.log
+ # http://debian-handbook.info/browse/stable/sect.automated-installation.html
+
+#  time build-simple-cdd --dist wheezy --local_packages smartmontools,ruby1.9.1 --all_extras /home/niklaus/.bash_aliases --keyboard de_CH --locale de_CH --kernel-packages linux-image-amd64  --debian-mirror $SERVER  2>&1 | tee build_elexis.log
+time build-simple-cdd --dist wheezy --profiles elexis  --debian-mirror ftp://ftp.ch.debian.org/debian/  2>&1 | tee build_elexis.log
+
+mirror_components="main contrib non-free"
+export all_extras="$PWD/profiles/custom-file $PWD/elexis.tar.gz"
+locale="de_CH"
+keyboard="sg"
+
+# --profiles elexis \
+
+ls -lrth images
+echo Do you want to create images and test installationm
+echo qemu-img create  elexis-test.qcow2 4GB
+echo kvm -hda -boot d elexis-test.qcow2 -cdrom images/debian-wheezy-amd64-CD-1.iso
+
+# need debian-cd 3.1.15
+# simple-cdd 0.5.0

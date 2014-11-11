@@ -1,0 +1,16 @@
+apt-mirror-setup	apt-setup/use_mirror    boolean true
+apt-mirror-setup	apt-setup/no_mirror	boolean false
+ choose-mirror-bin	mirror/http/hostname	string	ftp.ch.debian.org
+
+user-setup-udeb	passwd/username	string	Elexis
+user-setup-udeb	passwd/user-fullname	string	elexis
+d-i   popularity-contest/participate  boolean false
+
+passwd passwd/root-password password elexisTest
+passwd passwd/root-password-again password elexisTest
+d-i passwd/user-fullname string elexis
+d-i passwd/username string elexis
+passwd passwd/user-password password elexisTest
+passwd passwd/user-password-again password elexisTest
+user-setup-udeb passwd/user-default-groups string audio cdrom floppy video plugdev netdev powerdev
+
