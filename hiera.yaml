@@ -1,0 +1,17 @@
+# default configuration written by /vagrant/runpuppet with default values for demo of elexis-vagrant
+# http://www.glennposton.com/posts/puppet_best_practices__environment_specific_configs
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: '%{settings::confdir}/%{::environment}'
+#  :datadir: '%{settings::confdir}/hiera-example-practice'
+
+:hierarchy:
+  - '%{::fqdn}'
+  - '%{::hostname}'
+  - '%{calling_module}'
+  - '%{::environment}'
+  - 'common/%{calling_module}'
+  - '%{lsbdistcodename}'
+  - common

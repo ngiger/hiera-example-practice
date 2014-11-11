@@ -6,6 +6,9 @@
 apt::proxy_host:              172.25.1.70
 apt::proxy_port:              3142
 
+git::config:user.name:  'Niklaus Giger'
+git::config:user.email: 'niklaus.giger@member.fsf.org'
+
 elexis::admin::editor_package: vim-nox
 elexis::backup::ensure: true
 elexis::params::db_type: mysql

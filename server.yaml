@@ -10,11 +10,13 @@ elexis::mysql_server::ensure: true
 x2go::version: wheezy  # or baikal or wheezy
 x2go::server::ensure: present
 packages_for_admin: [ fish, mosh, screen, lm-sensors, dlocate, mlocate, htop, curl, bzr, unattended-upgrades, inetutils-tools ]
-packages_for_server: [ smartmontools ]
+packages_for_server: [ smartmontools openjdk-7-jdk ]
 
-# TODO: ACL for /opt/samba
 # TODO: Backup-rsnapshot /opt/samba
-# TODO: NFS-Server für /opt/samba
+# TODO: preseed
+# TODO: dnsmasq + d/i options
+# TODO: tce mit Option für Ubuntu Installation
+
 # nfs4-acl-tools
 elexis::nfs::client: true
 elexis::nfs::server: true
@@ -98,10 +100,38 @@ samba::server::shares:
 desktop::display_manager:  kdm
 desktop::window_manager:   kde
 desktop::desktop_packages:
-  - openjdk-7-jdk
   - manpages-de
 
 cockpit::ensure: true
 cockpit::useMock: false
 cockpit::service::ensure: true
 cockpit::service::use_systemd: false
+
+dnsmasq::ensure: true
+dnsmasq::add2conf:
+  - dhcp-range=set:cable,172.25.1.150,172.25.1.200,12d
+  - dhcp-option=tag:cable,3,172.25.1.60
+  - dhcp-range=set:wlan,192.168.0.150,192.168.0.200,2h
+  - dhcp-option=tag:wlan,3,192.168.0.1 # DHCP option 3
+
+# http://wiki.ubuntuusers.de/Dnsmasq
+# DHCP-Option 3 is gateway
+# dhcp-option=42,130.133.1.10   # Timeserver time.fu-berlin.de
+ngiger::network_info:
+#    - { mac: '00:00:27:22:6f:02', ip: '172.25.1.130', name: 'server' }
+#    - { mac: '00:00:27:22:8F:02', ip: '172.25.1.120', name: 'ubuntu' }
+
+tst::server: 172.25.1.111
+tst::nested: "${tst::server}_xxxx"
+
+dnsmasq::ltsp::ensure: true
+dnsmasq::ltsp::tftp_root: '/opt/installer'
+dnsmasq::ltsp::root_path: '/opt/installer'
+dnsmasq::ltsp::boot_params: 'ltsp/i386/pxelinux.0,server,172.25.1.60'
+dnsmasq::ltsp::pxe_service: 'X86PC, "Boot thinclient from network (x2go)", /pxelinux, 172.25.1.60'
+
+foo:
+   - 'one'
+   - 'two'
+
+bar: %{hiera('foo')}
